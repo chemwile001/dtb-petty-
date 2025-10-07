@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTB Petty Cash - Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a3a5f; /* DTB Blue */
+            --secondary: #2c5aa0; /* Lighter DTB Blue */
+            --accent: #f8b739; /* DTB Gold */
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .logo {
+            height: 40px;
+            width: auto;
+            margin-right: 12px;
+        }
+        
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .nav-links {
+            list-style: none;
+            padding: 0 1rem;
+        }
+        
+        .nav-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .nav-links i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-bar {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--light);
+            border-radius: 30px;
+            padding: 0.5rem 1rem;
+            width: 300px;
+        }
+        
+        .search-bar input {
+            border: none;
+            background: transparent;
+            margin-left: 10px;
+            width: 100%;
+            outline: none;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .content-area {
+            padding: 2rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .back-link {
+            color: var(--secondary);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+        
+        .back-link:hover {
+            color: var(--primary);
+        }
+        
+        /* Content Cards */
+        .content-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary { 
+            background: var(--secondary); 
+            color: white; 
+        }
+        
+        .btn-primary:hover { 
+            background: var(--primary); 
+        }
+        
+        .btn-success { 
+            background: var(--success); 
+            color: white; 
+        }
+        
+        .btn-success:hover { 
+            background: #219653; 
+        }
+        
+        .btn-danger { 
+            background: var(--danger); 
+            color: white; 
+        }
+        
+        .btn-danger:hover { 
+            background: #c0392b; 
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        /* Form Elements */
+        .form-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            flex: 1;
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+        }
+        
+        /* Settings Specific Styles */
+        .settings-section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--success);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            margin-top: 0.5rem;
+        }
+        
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .color-option.active {
+            border-color: var(--dark);
+        }
+        
+        .theme-blue { background: #1a3a5f; }
+        .theme-green { background: #27ae60; }
+        .theme-purple { background: #8e44ad; }
+        .theme-dark { background: #2c3e50; }
+        
+        .danger-zone {
+            border-left: 4px solid var(--danger);
+            background: rgba(231, 76, 60, 0.05);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 1rem 0;
+            }
+            
+            .nav-links {
+                display: flex;
+                overflow-x: auto;
+                padding: 0 1rem;
+            }
+            
+            .nav-links li {
+                margin-bottom: 0;
+                margin-right: 0.5rem;
+            }
+            
+            .nav-links a {
+                white-space: nowrap;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .top-bar {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .content-area {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo-container">
+                <!-- DTB Logo -->
+                <svg class="logo" width="40" height="40" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="50" height="50" rx="8" fill="white"/>
+                    <path d="M15 15H35V35H15V15Z" fill="#f8b739"/>
+                    <path d="M20 20H30V30H20V20Z" fill="#1a3a5f"/>
+                    <text x="25" y="38" text-anchor="middle" fill="#1a3a5f" font-family="Arial" font-size="10" font-weight="bold">DTB</text>
+                </svg>
+                <div class="logo-text">DTB Petty Cash</div>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#" class="active"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search settings...">
+                </div>
+                
+                <div class="user-info">
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="user-avatar">JD</div>
+                    <div>
+                        <div>John Doe</div>
+                        <div style="font-size: 0.8rem; color: var(--gray);">Finance Manager</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Settings Content -->
+                <div id="settings">
+                    <h1 class="page-title">
+                        Settings
+                        <a href="dashboard.html" class="back-link">
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        </a>
+                    </h1>
+                    
+                    <!-- Profile Settings -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fas fa-user-circle"></i> Profile Settings</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="settings-section">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="fullName">Full Name</label>
+                                        <input type="text" id="fullName" value="John Doe">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email Address</label>
+                                        <input type="email" id="email" value="john.doe@dtb.com">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="department">Department</label>
+                                        <select id="department">
+                                            <option>Finance</option>
+                                            <option>Operations</option>
+                                            <option>HR</option>
+                                            <option>IT</option>
+                                            <option>Marketing</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="branch">Branch</label>
+                                        <select id="branch">
+                                            <option>Nairobi Main</option>
+                                            <option>Westlands</option>
+                                            <option>Mombasa</option>
+                                            <option>Kisumu</option>
+                                            <option>Eldoret</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="phone">Phone Number</label>
+                                    <input type="tel" id="phone" value="+254 712 345 678">
+                                </div>
+                                
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Update Profile
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Notification Preferences -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fas fa-bell"></i> Notification Preferences</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="settings-section">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="emailNotifications" checked>
+                                    <label for="emailNotifications">Email notifications for new submissions</label>
+                                </div>
+                                
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="approvalNotifications" checked>
+                                    <label for="approvalNotifications">Notifications when submissions are approved</label>
+                                </div>
+                                
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="rejectionNotifications">
+                                    <label for="rejectionNotifications">Notifications when submissions are rejected</label>
+                                </div>
+                                
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="weeklyReports" checked>
+                                    <label for="weeklyReports">Weekly summary reports</label>
+                                </div>
+                                
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="monthlyReports">
+                                    <label for="monthlyReports">Monthly analytics reports</label>
+                                </div>
+                                
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Preferences
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Application Settings -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fas fa-sliders-h"></i> Application Settings</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="settings-section">
+                                <div class="form-group">
+                                    <label for="defaultCurrency">Default Currency</label>
+                                    <select id="defaultCurrency">
+                                        <option>KES - Kenyan Shilling</option>
+                                        <option>USD - US Dollar</option>
+                                        <option>EUR - Euro</option>
+                                        <option>GBP - British Pound</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="dateFormat">Date Format</label>
+                                    <select id="dateFormat">
+                                        <option>DD/MM/YYYY</option>
+                                        <option>MM/DD/YYYY</option>
+                                        <option>YYYY-MM-DD</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="defaultSubmissionPeriod">Default Submission Period</label>
+                                    <select id="defaultSubmissionPeriod">
+                                        <option>Current Week</option>
+                                        <option>Previous Week</option>
+                                        <option>Current Month</option>
+                                        <option>Previous Month</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="itemsPerPage">Items Per Page</label>
+                                    <select id="itemsPerPage">
+                                        <option>10</option>
+                                        <option>25</option>
+                                        <option>50</option>
+                                        <option>100</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="autoSaveDrafts">Auto-save Drafts</label>
+                                    <div class="checkbox-group">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="autoSaveDrafts" checked>
+                                            <span class="slider"></span>
+                                        </label>
+                                        <span style="margin-left: 10px;">Enable auto-saving of draft submissions</span>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Settings
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Security Settings -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fas fa-shield-alt"></i> Security Settings</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="settings-section">
+                                <div class="form-group">
+                                    <label for="currentPassword">Current Password</label>
+                                    <input type="password" id="currentPassword">
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="newPassword">New Password</label>
+                                        <input type="password" id="newPassword">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirmPassword">Confirm New Password</label>
+                                        <input type="password" id="confirmPassword">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="twoFactorAuth">Two-Factor Authentication</label>
+                                    <div class="checkbox-group">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="twoFactorAuth">
+                                            <span class="slider"></span>
+                                        </label>
+                                        <span style="margin-left: 10px;">Enable two-factor authentication for added security</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="sessionTimeout">Session Timeout</label>
+                                    <select id="sessionTimeout">
+                                        <option>15 minutes</option>
+                                        <option>30 minutes</option>
+                                        <option>1 hour</option>
+                                        <option>2 hours</option>
+                                        <option>4 hours</option>
+                                    </select>
+                                </div>
+                                
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Update Security Settings
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Theme & Appearance -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fas fa-palette"></i> Theme & Appearance</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="settings-section">
+                                <div class="form-group">
+                                    <label>Color Theme</label>
+                                    <div class="color-picker">
+                                        <div class="color-option theme-blue active" data-theme="blue"></div>
+                                        <div class="color-option theme-green" data-theme="green"></div>
+                                        <div class="color-option theme-purple" data-theme="purple"></div>
+                                        <div class="color-option theme-dark" data-theme="dark"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="interfaceDensity">Interface Density</label>
+                                    <select id="interfaceDensity">
+                                        <option>Comfortable</option>
+                                        <option>Compact</option>
+                                        <option>Spacious</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="fontSize">Font Size</label>
+                                    <select id="fontSize">
+                                        <option>Small</option>
+                                        <option>Medium</option>
+                                        <option>Large</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="darkMode">Dark Mode</label>
+                                    <div class="checkbox-group">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="darkMode">
+                                            <span class="slider"></span>
+                                        </label>
+                                        <span style="margin-left: 10px;">Enable dark mode</span>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Apply Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Danger Zone -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fas fa-exclamation-triangle"></i> Danger Zone</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="danger-zone">
+                                <div class="form-group">
+                                    <label>Export All Data</label>
+                                    <p style="margin-bottom: 1rem; color: var(--gray);">Download a copy of all your data in CSV format.</p>
+                                    <button class="btn btn-outline">
+                                        <i class="fas fa-download"></i> Export Data
+                                    </button>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Delete Account</label>
+                                    <p style="margin-bottom: 1rem; color: var(--gray);">Permanently delete your account and all associated data. This action cannot be undone.</p>
+                                    <button class="btn btn-danger">
+                                        <i class="fas fa-trash-alt"></i> Delete Account
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Selection
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.color-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // In a real application, this would change the theme
+                alert(`Theme changed to ${this.getAttribute('data-theme')} mode`);
+            });
+        });
+        
+        // Save Settings
+        document.querySelectorAll('.btn-primary').forEach(button => {
+            if (button.textContent.includes('Save') || button.textContent.includes('Update')) {
+                button.addEventListener('click', function() {
+                    // In a real application, this would save the settings
+                    alert('Settings saved successfully!');
+                });
+            }
+        });
+        
+        // Delete Account Confirmation
+        document.querySelector('.btn-danger').addEventListener('click', function() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                alert('Account deletion process initiated. You will receive a confirmation email.');
+            }
+        });
+    </script>
+</body>
+</html>

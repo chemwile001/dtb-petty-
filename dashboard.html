@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTB Petty Cash Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a3a5f; /* DTB Blue */
+            --secondary: #2c5aa0; /* Lighter DTB Blue */
+            --accent: #f8b739; /* DTB Gold */
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .logo {
+            height: 40px;
+            width: auto;
+            margin-right: 12px;
+        }
+        
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .nav-links {
+            list-style: none;
+            padding: 0 1rem;
+        }
+        
+        .nav-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .nav-links i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-bar {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--light);
+            border-radius: 30px;
+            padding: 0.5rem 1rem;
+            width: 300px;
+        }
+        
+        .search-bar input {
+            border: none;
+            background: transparent;
+            margin-left: 10px;
+            width: 100%;
+            outline: none;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .content-area {
+            padding: 2rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .stat-icon.primary {
+            background: rgba(26, 58, 95, 0.1);
+            color: var(--primary);
+        }
+        
+        .stat-icon.success {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+        }
+        
+        .stat-icon.warning {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+        }
+        
+        .stat-icon.danger {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+        
+        .stat-info h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Content Cards */
+        .content-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary { 
+            background: var(--secondary); 
+            color: white; 
+        }
+        
+        .btn-primary:hover { 
+            background: var(--primary); 
+        }
+        
+        .btn-success { 
+            background: var(--success); 
+            color: white; 
+        }
+        
+        .btn-success:hover { 
+            background: #219653; 
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        /* Form Elements */
+        .form-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            flex: 1;
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+        }
+        
+        .expense-item {
+            background: var(--light);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary);
+            position: relative;
+        }
+        
+        .remove-expense {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+        
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        th {
+            background: var(--light);
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        tr:hover {
+            background: rgba(44, 90, 160, 0.02);
+        }
+        
+        .status-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .status-draft { background: var(--warning); color: white; }
+        .status-pending { background: var(--secondary); color: white; }
+        .status-approved { background: var(--success); color: white; }
+        .status-rejected { background: var(--danger); color: white; }
+        
+        .actions-cell {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 1rem 0;
+            }
+            
+            .nav-links {
+                display: flex;
+                overflow-x: auto;
+                padding: 0 1rem;
+            }
+            
+            .nav-links li {
+                margin-bottom: 0;
+                margin-right: 0.5rem;
+            }
+            
+            .nav-links a {
+                white-space: nowrap;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .top-bar {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .content-area {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo-container">
+                <!-- DTB Logo -->
+                <svg class="logo" width="40" height="40" viewBox="0 0 50 50" fill="none" xmlns="data:image/png;base64,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">
+                    <rect width="50" height="50" rx="8" fill="white"/>
+                    <path d="M15 15H35V35H15V15Z" fill="#f8b739"/>
+                    <path d="M20 20H30V30H20V20Z" fill="#1a3a5f"/>
+                    <text x="25" y="38" text-anchor="middle" fill="#1a3a5f" font-family="Arial" font-size="10" font-weight="bold">DTB</text>
+                </svg>
+                <div class="logo-text">DTB Petty Cash</div>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#" data-tab="new-submission"><i class="fas fa-plus-circle"></i> New Submission</a></li>
+                <li><a href="#" data-tab="my-submissions"><i class="fas fa-file-alt"></i> My Submissions</a></li>
+                <li><a href="#" data-tab="pending-review"><i class="fas fa-clock"></i> Pending Review</a></li>
+                <li><a href="#" data-tab="reports"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                
+                <div class="user-info">
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="user-avatar">JD</div>
+                    <div>
+                        <div>John Doe</div>
+                        <div style="font-size: 0.8rem; color: var(--gray);">Finance Manager</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Dashboard Tab -->
+                <div id="dashboard" class="tab-content active">
+                    <h1 class="page-title">Dashboard Overview</h1>
+                    
+                    <!-- Stats Cards -->
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <div class="stat-icon primary">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>24</h3>
+                                <p>Total Submissions</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon warning">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>8</h3>
+                                <p>Pending Review</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon success">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>14</h3>
+                                <p>Approved</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon danger">
+                                <i class="fas fa-times-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>2</h3>
+                                <p>Rejected</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Activity -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div class="card-title">Recent Activity</div>
+                            <button class="btn btn-outline">View All</button>
+                        </div>
+                        <div class="card-body">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>Period</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>PC-2023-0012</td>
+                                        <td>Week 3 - March 2023</td>
+                                        <td>KES 12,450.00</td>
+                                        <td><span class="status-badge status-approved">APPROVED</span></td>
+                                        <td>Mar 15, 2023</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PC-2023-0011</td>
+                                        <td>Week 2 - March 2023</td>
+                                        <td>KES 8,750.00</td>
+                                        <td><span class="status-badge status-pending">PENDING</span></td>
+                                        <td>Mar 8, 2023</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PC-2023-0010</td>
+                                        <td>Week 1 - March 2023</td>
+                                        <td>KES 15,200.00</td>
+                                        <td><span class="status-badge status-approved">APPROVED</span></td>
+                                        <td>Mar 1, 2023</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- New Submission Tab -->
+                <div id="new-submission" class="tab-content">
+                    <h1 class="page-title">New Petty Cash Submission</h1>
+                    
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div class="card-title">Expense Details</div>
+                        </div>
+                        <div class="card-body">
+                            <form id="expenseForm">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="period">Period:</label>
+                                        <select id="period" required>
+                                            <option value="">Select Period</option>
+                                            <option value="WEEK 1">Week 1</option>
+                                            <option value="WEEK 2">Week 2</option>
+                                            <option value="WEEK 3">Week 3</option>
+                                            <option value="WEEK 4">Week 4</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="month">Month:</label>
+                                        <select id="month" required>
+                                            <option value="">Select Month</option>
+                                            <option value="January">January</option>
+                                            <option value="February">February</option>
+                                            <option value="March">March</option>
+                                            <option value="April">April</option>
+                                            <option value="May">May</option>
+                                            <option value="June">June</option>
+                                            <option value="July">July</option>
+                                            <option value="August">August</option>
+                                            <option value="September">September</option>
+                                            <option value="October">October</option>
+                                            <option value="November">November</option>
+                                            <option value="December">December</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="year">Year:</label>
+                                        <input type="number" id="year" min="2024" max="2030" value="2023" required>
+                                    </div>
+                                </div>
+
+                                <h3 style="margin: 1.5rem 0 1rem; color: var(--primary);">Expense Items</h3>
+                                <div id="expenses-container">
+                                    <div class="expense-item">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="expense-category-0">Expense Type:</label>
+                                                <select class="expense-category" id="expense-category-0" required>
+                                                    <option value="">Select Category</option>
+                                                    <option value="Office Supplies">Office Supplies</option>
+                                                    <option value="Transport">Transport</option>
+                                                    <option value="Meals">Meals</option>
+                                                    <option value="Utilities">Utilities</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="expense-date-0">Date of Expense:</label>
+                                                <input type="date" class="expense-date" id="expense-date-0" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="expense-amount-0">Amount (KES):</label>
+                                                <input type="number" class="expense-amount" id="expense-amount-0" step="0.01" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="expense-description-0">Description / Justification:</label>
+                                            <textarea class="expense-description" id="expense-description-0" rows="3" required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem;">
+                                    <button type="button" class="btn btn-primary" onclick="addExpense()">
+                                        <i class="fas fa-plus"></i> Add Another Expense
+                                    </button>
+                                    <button type="button" class="btn btn-success" onclick="submitExpenses()">
+                                        <i class="fas fa-paper-plane"></i> Submit Expenses
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- My Submissions Tab -->
+                <div id="my-submissions" class="tab-content">
+                    <h1 class="page-title">My Submissions</h1>
+                    
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div class="card-title">Submission History</div>
+                            <div>
+                                <button class="btn btn-outline"><i class="fas fa-filter"></i> Filter</button>
+                                <button class="btn btn-primary"><i class="fas fa-download"></i> Export</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>Period</th>
+                                        <th>Total Amount</th>
+                                        <th>Status</th>
+                                        <th>Submitted</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>PC-2023-0012</td>
+                                        <td>Week 3 - March 2023</td>
+                                        <td>KES 12,450.00</td>
+                                        <td><span class="status-badge status-approved">APPROVED</span></td>
+                                        <td>Mar 15, 2023</td>
+                                        <td class="actions-cell">
+                                            <button class="btn btn-outline"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-outline"><i class="fas fa-edit"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>PC-2023-0011</td>
+                                        <td>Week 2 - March 2023</td>
+                                        <td>KES 8,750.00</td>
+                                        <td><span class="status-badge status-pending">PENDING</span></td>
+                                        <td>Mar 8, 2023</td>
+                                        <td class="actions-cell">
+                                            <button class="btn btn-outline"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-outline"><i class="fas fa-edit"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>PC-2023-0010</td>
+                                        <td>Week 1 - March 2023</td>
+                                        <td>KES 15,200.00</td>
+                                        <td><span class="status-badge status-approved">APPROVED</span></td>
+                                        <td>Mar 1, 2023</td>
+                                        <td class="actions-cell">
+                                            <button class="btn btn-outline"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-outline"><i class="fas fa-edit"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Other tabs would go here -->
+                <div id="pending-review" class="tab-content">
+                    <h1 class="page-title">Pending Review</h1>
+                    <div class="empty-state">
+                        <div class="empty-state-icon"><i class="fas fa-clock"></i></div>
+                        <h3>No Submissions Pending Review</h3>
+                        <p>All submissions have been processed.</p>
+                    </div>
+                </div>
+                
+                <div id="reports" class="tab-content">
+                    <h1 class="page-title">Reports & Analytics</h1>
+                    <div class="empty-state">
+                        <div class="empty-state-icon"><i class="fas fa-chart-bar"></i></div>
+                        <h3>Reports Coming Soon</h3>
+                        <p>Detailed expense reports and analytics will be available here.</p>
+                    </div>
+                </div>
+                
+                <div id="settings" class="tab-content">
+                    <h1 class="page-title">Settings</h1>
+                    <div class="empty-state">
+                        <div class="empty-state-icon"><i class="fas fa-cog"></i></div>
+                        <h3>Settings Panel</h3>
+                        <p>User preferences and system settings will be available here.</p>
+                        
+   <ul>
+      <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+   </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Navigation
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                document.querySelectorAll('.nav-links a').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Hide all tab content
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                // Show selected tab content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Expense Form Management
+        let expenseCounter = 1;
+        
+        function addExpense() {
+            const container = document.getElementById('expenses-container');
+            const newExpense = document.createElement('div');
+            newExpense.className = 'expense-item';
+            newExpense.innerHTML = `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Expense Type:</label>
+                        <select class="expense-category" required>
+                            <option value="">Select Category</option>
+                            <option value="Office Supplies">Office Supplies</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Meals">Meals</option>
+                            <option value="Utilities">Utilities</option>
+                            <option value="Maintenance">Maintenance</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Expense:</label>
+                        <input type="date" class="expense-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount (KES):</label>
+                        <input type="number" class="expense-amount" step="0.01" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description / Justification:</label>
+                    <textarea class="expense-description" rows="3" required></textarea>
+                </div>
+                <button type="button" class="btn btn-danger remove-expense" onclick="removeExpense(this)">
+                    <i class="fas fa-trash"></i> Remove
+                </button>
+            `;
+            container.appendChild(newExpense);
+            expenseCounter++;
+        }
+        
+        function removeExpense(button) {
+            if (document.querySelectorAll('.expense-item').length > 1) {
+                button.parentElement.remove();
+            }
+        }
+        
+        function submitExpenses() {
+            // In a real application, this would submit the form data to a server
+            alert('Expense submission would be processed here in a real application.');
+            
+            // Reset form and show success message
+            document.getElementById('expenseForm').reset();
+            document.getElementById('expenses-container').innerHTML = `
+                <div class="expense-item">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Expense Type:</label>
+                            <select class="expense-category" required>
+                                <option value="">Select Category</option>
+                                <option value="Office Supplies">Office Supplies</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Meals">Meals</option>
+                                <option value="Utilities">Utilities</option>
+                                <option value="Maintenance">Maintenance</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Date of Expense:</label>
+                            <input type="date" class="expense-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount (KES):</label>
+                            <input type="number" class="expense-amount" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description / Justification:</label>
+                        <textarea class="expense-description" rows="3" required></textarea>
+                    </div>
+                </div>
+            `;
+            expenseCounter = 1;
+            
+            // Switch to My Submissions tab
+            document.querySelectorAll('.nav-links a').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector('[data-tab="my-submissions"]').classList.add('active');
+            
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById('my-submissions').classList.add('active');
+        }
+    </script>
+</body>
+</html>
